@@ -7,7 +7,7 @@ IF EXISTS (
         WHERE name = N'Mercadito'
 )
 DROP DATABASE Mercadito
-Go
+GO
 CREATE DATABASE Mercadito
 GO
 
@@ -41,8 +41,8 @@ CREATE TABLE dbo.Proveedor
 );
 GO
 
-IF OBJECT_ID('dbo.Productos', 'U') IS NOT NULL
-DROP TABLE dbo.Productos
+IF OBJECT_ID('dbo.Producto', 'U') IS NOT NULL
+DROP TABLE dbo.Producto
 GO
 
 CREATE TABLE dbo.Producto
@@ -102,8 +102,8 @@ CREATE TABLE dbo.Cliente
     Nombre [NVARCHAR](50) NOT NULL,
     Direccion [NVARCHAR](50) NOT NULL,
     Telefono INT NOT NULL,
-    CreditoAPB FLOAT NOT NULL,
-    Saldo FLOAT NOT NULL,
+    CreditoAPB INT NOT NULL,
+    Saldo INT NOT NULL,
     CONSTRAINT pkCliente PRIMARY KEY(id)
 );
 GO
@@ -257,10 +257,10 @@ INSERT INTO Cliente
 )
 VALUES
 (
- 'David Diaz', 'Barrio buenos aires', 123123213, 5500.00, 1200.10 
+ 'David Diaz', 'Barrio buenos aires', 123123213, 300, 250 
 ),
 (
- 'asdasd', 'adadasd',  1245435, 123123, 12312
+ 'asdasd', 'adadasd',  1245435, 350, 50
 )
 GO
 
@@ -274,6 +274,12 @@ VALUES
 ),
 (
  2, 769.72, '20201111'
+),
+(
+ 2, 769.72, '20201111'
+),
+(
+ 2, 769.72, '20201111'
 )
 GO
 
@@ -283,10 +289,10 @@ INSERT INTO DetalleFactura
 )
 VALUES
 (
- 1, 12, 12, 52 
+ 1, 1, 12, 52 
 ),
 (
- 2, 3, 2, 3
+ 2, 2, 2, 3
 )
 GO
 
@@ -351,3 +357,20 @@ SELECT * FROM dbo.CuentasContables
 GO
 SELECT * FROM dbo.Categoria
 GO
+
+--Consultas que pide el ejercicio
+
+SELECT idCliente, COUNT(idCliente) as 'Pagos de clientes' FROM dbo.PagosClientes
+GROUP BY idCliente
+
+SELECT Cliente.Nombre, Cliente.CreditoAPB, Cliente.Saldo, PagosClientes.id 
+FROM PagosClientes 
+join Cliente on PagosClientes.idCliente = Cliente.id
+WHERE Cliente.Saldo BETWEEN Cliente.CreditoAPB - 100 AND Cliente.CreditoAPB
+
+SELECT Cliente.Nombre, Factura.Fecha, Producto.Nombre, DetalleFactura.Precio, 
+DetalleFactura.Cantidad, Factura.CostoTotal 
+FROM Factura
+join Cliente on Factura.idCliente = Cliente.id 
+join DetalleFactura on Factura.id = DetalleFactura.idFactura 
+join Producto on DetalleFactura.idProducto = Producto.id
