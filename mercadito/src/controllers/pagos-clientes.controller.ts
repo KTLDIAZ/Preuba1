@@ -19,17 +19,19 @@ import {
 import {PagosClientes} from '../models';
 import {PagosClientesRepository} from '../repositories';
 
-export class PagosController {
+export class PagosClientesController {
   constructor(
     @repository(PagosClientesRepository)
-    public pagosClientesRepository : PagosClientesRepository,
+    public pagosClientesRepository: PagosClientesRepository,
   ) {}
 
   @post('/pagos-clientes', {
     responses: {
       '200': {
         description: 'PagosClientes model instance',
-        content: {'application/json': {schema: getModelSchemaRef(PagosClientes)}},
+        content: {
+          'application/json': {schema: getModelSchemaRef(PagosClientes)},
+        },
       },
     },
   })
@@ -120,7 +122,8 @@ export class PagosController {
   })
   async findById(
     @param.path.number('id') id: number,
-    @param.filter(PagosClientes, {exclude: 'where'}) filter?: FilterExcludingWhere<PagosClientes>
+    @param.filter(PagosClientes, {exclude: 'where'})
+    filter?: FilterExcludingWhere<PagosClientes>,
   ): Promise<PagosClientes> {
     return this.pagosClientesRepository.findById(id, filter);
   }
@@ -169,5 +172,16 @@ export class PagosController {
   })
   async deleteById(@param.path.number('id') id: number): Promise<void> {
     await this.pagosClientesRepository.deleteById(id);
+  }
+
+  @get('/pagos-clientes/vPagosClientes')
+  async vista1(): Promise<any> {
+    let datos: any[] = await this.getView1();
+    return datos;
+  }
+  async getView1() {
+    return await this.pagosClientesRepository.dataSource.execute(
+      `SELECT * FROM dbo.vPagosClientes`,
+    );
   }
 }

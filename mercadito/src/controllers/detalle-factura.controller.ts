@@ -22,14 +22,16 @@ import {DetalleFacturaRepository} from '../repositories';
 export class DetalleFacturaController {
   constructor(
     @repository(DetalleFacturaRepository)
-    public detalleFacturaRepository : DetalleFacturaRepository,
+    public detalleFacturaRepository: DetalleFacturaRepository,
   ) {}
 
   @post('/detalle-facturas', {
     responses: {
       '200': {
         description: 'DetalleFactura model instance',
-        content: {'application/json': {schema: getModelSchemaRef(DetalleFactura)}},
+        content: {
+          'application/json': {schema: getModelSchemaRef(DetalleFactura)},
+        },
       },
     },
   })
@@ -71,7 +73,9 @@ export class DetalleFacturaController {
           'application/json': {
             schema: {
               type: 'array',
-              items: getModelSchemaRef(DetalleFactura, {includeRelations: true}),
+              items: getModelSchemaRef(DetalleFactura, {
+                includeRelations: true,
+              }),
             },
           },
         },
@@ -120,7 +124,8 @@ export class DetalleFacturaController {
   })
   async findById(
     @param.path.number('id') id: number,
-    @param.filter(DetalleFactura, {exclude: 'where'}) filter?: FilterExcludingWhere<DetalleFactura>
+    @param.filter(DetalleFactura, {exclude: 'where'})
+    filter?: FilterExcludingWhere<DetalleFactura>,
   ): Promise<DetalleFactura> {
     return this.detalleFacturaRepository.findById(id, filter);
   }
@@ -169,5 +174,16 @@ export class DetalleFacturaController {
   })
   async deleteById(@param.path.number('id') id: number): Promise<void> {
     await this.detalleFacturaRepository.deleteById(id);
+  }
+
+  @get('/detalle-factura/vProductosCategoria')
+  async vista1(): Promise<any> {
+    let datos: any[] = await this.getView1();
+    return datos;
+  }
+  async getView1() {
+    return await this.detalleFacturaRepository.dataSource.execute(
+      `SELECT * FROM dbo.vProductosCategoria`,
+    );
   }
 }

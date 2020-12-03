@@ -16,20 +16,22 @@ import {
   del,
   requestBody,
 } from '@loopback/rest';
-import {Transacciones} from '../models';
+import {Transacciones, VTransacciones} from '../models';
 import {TransaccionesRepository} from '../repositories';
 
 export class TransaccionesController {
   constructor(
     @repository(TransaccionesRepository)
-    public transaccionesRepository : TransaccionesRepository,
+    public transaccionesRepository: TransaccionesRepository,
   ) {}
 
   @post('/transacciones', {
     responses: {
       '200': {
         description: 'Transacciones model instance',
-        content: {'application/json': {schema: getModelSchemaRef(Transacciones)}},
+        content: {
+          'application/json': {schema: getModelSchemaRef(Transacciones)},
+        },
       },
     },
   })
@@ -120,7 +122,8 @@ export class TransaccionesController {
   })
   async findById(
     @param.path.number('id') id: number,
-    @param.filter(Transacciones, {exclude: 'where'}) filter?: FilterExcludingWhere<Transacciones>
+    @param.filter(Transacciones, {exclude: 'where'})
+    filter?: FilterExcludingWhere<Transacciones>,
   ): Promise<Transacciones> {
     return this.transaccionesRepository.findById(id, filter);
   }
@@ -169,5 +172,22 @@ export class TransaccionesController {
   })
   async deleteById(@param.path.number('id') id: number): Promise<void> {
     await this.transaccionesRepository.deleteById(id);
+  }
+
+  @get('/transacciones/VtransaccionesProveedor')
+  async vista1(): Promise<VTransacciones> {
+    let datos: VTransacciones = await this.getView1();
+    return datos;
+  }
+  async getView1() {
+    let data: VTransacciones = {
+      Cliente: await this.transaccionesRepository.dataSource.execute(
+        `SELECT * FROM dbo.vTransaccionesProveedor`,
+      ),
+      Provedor: await this.transaccionesRepository.dataSource.execute(
+        `SELECT * FROM dbo.vTransaccionesCliente`,
+      ),
+    };
+    return data;
   }
 }

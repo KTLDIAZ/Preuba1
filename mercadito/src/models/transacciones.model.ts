@@ -25,22 +25,6 @@ export class Transacciones extends Entity {
   id?: number;
 
   @property({
-    type: 'number',
-    required: true,
-    precision: 10,
-    scale: 0,
-    mssql: {
-      columnName: 'idCuenta',
-      dataType: 'int',
-      dataLength: null,
-      dataPrecision: 10,
-      dataScale: 0,
-      nullable: 'NO',
-    },
-  })
-  idCuenta: number;
-
-  @property({
     type: 'string',
     required: true,
     length: 50,
@@ -54,36 +38,6 @@ export class Transacciones extends Entity {
     },
   })
   concepto: string;
-
-  @property({
-    type: 'number',
-    required: true,
-    precision: 53,
-    mssql: {
-      columnName: 'Debe',
-      dataType: 'float',
-      dataLength: null,
-      dataPrecision: 53,
-      dataScale: null,
-      nullable: 'NO',
-    },
-  })
-  debe: number;
-
-  @property({
-    type: 'number',
-    required: true,
-    precision: 53,
-    mssql: {
-      columnName: 'Haber',
-      dataType: 'float',
-      dataLength: null,
-      dataPrecision: 53,
-      dataScale: null,
-      nullable: 'NO',
-    },
-  })
-  haber: number;
 
   @property({
     type: 'date',
@@ -110,6 +64,10 @@ export class Transacciones extends Entity {
   }
 }
 
+export interface VTransacciones {
+  Cliente: Array<any>;
+  Provedor: Array<any>;
+}
 export interface TransaccionesRelations {
   // describe navigational properties here
 }

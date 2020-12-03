@@ -9,3 +9,4 @@ export * from './pedido.repository';
 export * from './producto.repository';
 export * from './proveedor.repository';
 export * from './transacciones.repository';
+export * from './libro-diario.repository';

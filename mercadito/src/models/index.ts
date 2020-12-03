@@ -9,3 +9,4 @@ export * from './detalle-factura.model';
 export * from './cuentas-contables.model';
 export * from './transacciones.model';
 export * from './pagos-clientes.model';
+export * from './libro-diario.model';

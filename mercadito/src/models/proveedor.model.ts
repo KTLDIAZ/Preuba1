@@ -52,6 +52,21 @@ export class Proveedor extends Entity {
   empresa: string;
 
   @property({
+    type: 'string',
+    required: true,
+    length: 50,
+    mssql: {
+      columnName: 'Tipo',
+      dataType: 'nvarchar',
+      dataLength: 50,
+      dataPrecision: null,
+      dataScale: null,
+      nullable: 'NO',
+    },
+  })
+  tipo: string;
+
+  @property({
     type: 'number',
     required: true,
     precision: 10,

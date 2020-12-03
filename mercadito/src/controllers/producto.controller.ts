@@ -22,7 +22,7 @@ import {ProductoRepository} from '../repositories';
 export class ProductoController {
   constructor(
     @repository(ProductoRepository)
-    public productoRepository : ProductoRepository,
+    public productoRepository: ProductoRepository,
   ) {}
 
   @post('/productos', {
@@ -57,9 +57,7 @@ export class ProductoController {
       },
     },
   })
-  async count(
-    @param.where(Producto) where?: Where<Producto>,
-  ): Promise<Count> {
+  async count(@param.where(Producto) where?: Where<Producto>): Promise<Count> {
     return this.productoRepository.count(where);
   }
 
@@ -120,7 +118,8 @@ export class ProductoController {
   })
   async findById(
     @param.path.number('id') id: number,
-    @param.filter(Producto, {exclude: 'where'}) filter?: FilterExcludingWhere<Producto>
+    @param.filter(Producto, {exclude: 'where'})
+    filter?: FilterExcludingWhere<Producto>,
   ): Promise<Producto> {
     return this.productoRepository.findById(id, filter);
   }
@@ -169,5 +168,27 @@ export class ProductoController {
   })
   async deleteById(@param.path.number('id') id: number): Promise<void> {
     await this.productoRepository.deleteById(id);
+  }
+
+  @get('/productos/vPrecio30')
+  async vista1(): Promise<any> {
+    let datos: any[] = await this.getView1();
+    return datos;
+  }
+  async getView1() {
+    return await this.productoRepository.dataSource.execute(
+      `SELECT * FROM dbo.vPrecio30`,
+    );
+  }
+
+  @get('/productos/vPrecioDefinido')
+  async vista2(): Promise<any> {
+    let datos: any[] = await this.getView2();
+    return datos;
+  }
+  async getView2() {
+    return await this.productoRepository.dataSource.execute(
+      `SELECT * FROM dbo.vPrecioDefinido`,
+    );
   }
 }

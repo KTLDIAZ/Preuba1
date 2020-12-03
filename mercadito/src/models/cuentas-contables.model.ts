@@ -39,36 +39,6 @@ export class CuentasContables extends Entity {
   })
   cuenta: string;
 
-  @property({
-    type: 'number',
-    required: true,
-    precision: 53,
-    mssql: {
-      columnName: 'Debe',
-      dataType: 'float',
-      dataLength: null,
-      dataPrecision: 53,
-      dataScale: null,
-      nullable: 'NO',
-    },
-  })
-  debe: number;
-
-  @property({
-    type: 'number',
-    required: true,
-    precision: 53,
-    mssql: {
-      columnName: 'Haber',
-      dataType: 'float',
-      dataLength: null,
-      dataPrecision: 53,
-      dataScale: null,
-      nullable: 'NO',
-    },
-  })
-  haber: number;
-
   // Define well-known properties here
 
   // Indexer property to allow additional data

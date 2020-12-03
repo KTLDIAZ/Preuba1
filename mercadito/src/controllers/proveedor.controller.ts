@@ -22,7 +22,7 @@ import {ProveedorRepository} from '../repositories';
 export class ProveedorController {
   constructor(
     @repository(ProveedorRepository)
-    public proveedorRepository : ProveedorRepository,
+    public proveedorRepository: ProveedorRepository,
   ) {}
 
   @post('/proveedors', {
@@ -120,7 +120,8 @@ export class ProveedorController {
   })
   async findById(
     @param.path.number('id') id: number,
-    @param.filter(Proveedor, {exclude: 'where'}) filter?: FilterExcludingWhere<Proveedor>
+    @param.filter(Proveedor, {exclude: 'where'})
+    filter?: FilterExcludingWhere<Proveedor>,
   ): Promise<Proveedor> {
     return this.proveedorRepository.findById(id, filter);
   }
@@ -169,5 +170,19 @@ export class ProveedorController {
   })
   async deleteById(@param.path.number('id') id: number): Promise<void> {
     await this.proveedorRepository.deleteById(id);
+  }
+
+  @get('/proveedors/ClasificarProveedores')
+  async vista1(
+    @param.query.number('Fecha') Fecha: Date,
+    @param.query.integer('Periodo') Periodo: Number,
+  ): Promise<any> {
+    let datos: any[] = await this.getView1(Fecha, Periodo);
+    return datos;
+  }
+  async getView1(arg1: Date, arg2: Number) {
+    return await this.proveedorRepository.dataSource.execute(
+      `EXECUTE dbo.ClasificarProveedores 100, 5, '${arg1}',  14`,
+    );
   }
 }
