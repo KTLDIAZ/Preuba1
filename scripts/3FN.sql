@@ -35,6 +35,7 @@ CREATE TABLE dbo.Proveedor
     id INT NOT NULL IDENTITY(1,1),
     Nombre [NVARCHAR](50) NOT NULL,
     Empresa [NVARCHAR](50) NOT NULL,
+    Tipo [NVARCHAR](50) NOT NULL,
     Telefono INT NOT NULL,
     Direccion [NVARCHAR](50) NOT NULL,
     CONSTRAINT pkProveedor PRIMARY KEY(id)
@@ -148,8 +149,6 @@ CREATE TABLE dbo.CuentasContables
 (
     id INT NOT NULL IDENTITY(1,1),
     Cuenta [NVARCHAR](50) NOT NULL,
-    Debe FLOAT NOT NULL,
-    Haber FLOAT NOT NULL,
     CONSTRAINT pkCuentas PRIMARY KEY(id)
 );
 GO
@@ -161,13 +160,26 @@ GO
 CREATE TABLE dbo.Transacciones
 (
     id INT NOT NULL IDENTITY(1,1),
-    idCuenta INT NOT NULL,
     Concepto [NVARCHAR](50) NOT NULL,
+    Fecha DATE NOT NULL,
+    CONSTRAINT pkTransacciones PRIMARY KEY(id)
+);
+GO
+
+IF OBJECT_ID('dbo.LibroDiario', 'U') IS NOT NULL
+DROP TABLE dbo.LibroDiario
+GO
+
+CREATE TABLE dbo.LibroDiario
+(
+    id INT NOT NULL IDENTITY(1,1),
+    idTransaccion INT NOT NULL,
+    idCuenta INT NOT NULL,
     Debe FLOAT NOT NULL,
     Haber FLOAT NOT NULL,
-    Fecha DATE NOT NULL,
-    CONSTRAINT pkTransacciones PRIMARY KEY(id),
-    CONSTRAINT fkTransaccionesCuenta FOREIGN KEY(idCuenta) REFERENCES CuentasContables(id)
+    CONSTRAINT pkLibroDiario PRIMARY KEY(id),
+    CONSTRAINT fkTransaccionesLibroDiario FOREIGN KEY(idTransaccion) REFERENCES Transacciones(id),
+    CONSTRAINT fkLibroCuenta FOREIGN KEY(idCuenta) REFERENCES CuentasContables(id)
 );
 GO
 
@@ -186,180 +198,7 @@ CREATE TABLE dbo.PagosClientes
 );
 GO
 
-INSERT INTO Categoria
-(
- [Nombre], [Descripciom]
-)
-VALUES
-( 
- 'Cocina', 'Procutos de cocina'
-),
-( 
- 'Jardin', 'Productos de jardineria'
-)
-GO
-
-INSERT INTO Proveedor
-(
- [Nombre], [Empresa], [Telefono], [Direccion]
-)
-VALUES
-(
- 'Melvin Diaz', 'Ceutec', 1231231, 'Puerto Cortes' 
-),
-(
- 'Jared Velasquez', 'Ceutec', 1231231231, 'SPS' 
-)
-GO
-
-INSERT INTO Producto
-(
- [Nombre], [idCategoria], [idProveedor], [CostoCompra], [PrecioVenta], [Existencias]
-)
-VALUES
-(
- 'Rica sula', '1', '1', 19.2, 32.1, 100
-),
-(
- 'Podadora', '2', '2', 119.2, 332.1, 20 
-)
-GO
-
-INSERT INTO Pedido
-(
- [idProveedor], [FechaEntrega], [CostoTotal]
-)
-VALUES
-(
- 1, '20201011', 1999.99 
-),
-(
- 2, '20201101', 2999.99 
-)
-GO
-
-INSERT INTO DetallePedido
-(
- [idPedido], [idProducto], [CostoUnidad], [Cantidad]
-)
-VALUES
-(
- 1, 1, 200.99, 100 
-),
-(
- 2, 2, 231.10, 20 
-)
-GO
-
-INSERT INTO Cliente
-(
- [Nombre], [Direccion], [Telefono], [CreditoAPB], [Saldo]
-)
-VALUES
-(
- 'David Diaz', 'Barrio buenos aires', 123123213, 300, 250 
-),
-(
- 'asdasd', 'adadasd',  1245435, 350, 50
-)
-GO
-
-INSERT INTO Factura
-(
- [idCliente], [CostoTotal], [Fecha]
-)
-VALUES
-(
- 1, 899.99, '20201110' 
-),
-(
- 2, 769.72, '20201111'
-),
-(
- 2, 769.72, '20201111'
-),
-(
- 2, 769.72, '20201111'
-)
-GO
-
-INSERT INTO DetalleFactura
-(
- [idFactura], [idProducto], [Cantidad], [Precio]
-)
-VALUES
-(
- 1, 1, 12, 52 
-),
-(
- 2, 2, 2, 3
-)
-GO
-
-INSERT INTO CuentasContables
-(
- [Cuenta], [Debe], [Haber]
-)
-VALUES
-(
- 'Cuenta cobrar', 2190.12, 0 
-),
-(
- 'cuenta pagar', 0, 3123 
-)
-GO
-
-INSERT INTO Transacciones
-(
- [idCuenta], [Concepto], [Debe], [Haber], [Fecha]
-)
-VALUES
-(
- 1, 'Credio al cliente 1', 1232, 0, '20201111'
-),
-(
- 2, 'Pagar electricidad', 0, 12312, '20201030' 
-)
-GO
-
-INSERT INTO PagosClientes
-(
- [idCliente], [idTransaccion]
-)
-VALUES
-(
- 1, 1 
-),
-(
- 2, 2 
-)
-GO
-
-SELECT * FROM dbo.Cliente
-GO
-SELECT * FROM dbo.Producto
-GO
-SELECT * FROM dbo.Proveedor
-GO
-SELECT * FROM dbo.Factura
-GO
-SELECT * FROM dbo.DetalleFactura
-GO
-SELECT * FROM dbo.Pedido
-GO
-SELECT * FROM dbo.DetallePedido
-GO
-SELECT * FROM dbo.PagosClientes
-GO
-SELECT * FROM dbo.Transacciones
-GO
-SELECT * FROM dbo.CuentasContables
-GO
-SELECT * FROM dbo.Categoria
-GO
-
---Consultas que pide el ejercicio
-
+--Consultas que pide el ejercicio de prueba
 SELECT idCliente, COUNT(idCliente) as 'Pagos de clientes' FROM dbo.PagosClientes
 GROUP BY idCliente
 
