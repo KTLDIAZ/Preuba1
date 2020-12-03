@@ -1,4 +1,4 @@
-USE Mercadito
+USE MercaditoMelvin
 GO
 
 INSERT INTO Categoria

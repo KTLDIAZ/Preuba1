@@ -1,4 +1,4 @@
-USE master
+/* USE master
 GO
 
 IF EXISTS (
@@ -9,9 +9,9 @@ IF EXISTS (
 DROP DATABASE Mercadito
 GO
 CREATE DATABASE Mercadito
-GO
+GO */
 
-USE Mercadito
+USE MercaditoMelvin
 
 IF OBJECT_ID('dbo.Categoria', 'U') IS NOT NULL
 DROP TABLE dbo.Categoria
